@@ -12,17 +12,18 @@ const fetchTasks=(req,res,next) =>{
 })
 }
  const fetchTasksavecasync= async(req,res,next) =>{
+    try{
     const tasks= await Task.find();
      res.status(200).json({
      model:tasks,
      message:"success"
  })
- .catch((e)=>{
+}catch(e){
      res.status(400).json({
          error:e.message,
          message:"probléme d'extration",
      })
- })
+ }
  }
 const addTask=(req,res)=>{
     console.log(req.body)

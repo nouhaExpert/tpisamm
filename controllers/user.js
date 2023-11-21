@@ -7,14 +7,19 @@ exports.signup=(req,res,next) =>{
     .then((hash)=>{
         const user=new User({
             email:req.body.email,
+            role:req.body.role,
+            firstname:req.body.firstname,
+            lastname:req.body.lastname,
             password:hash,
         })
         user.save()
         .then((response)=>{
             const newUser=response.toObject()
-            delete newUser.password
+            newUser.name=user.toPublic();
+            
             res.status(201).json({
                 user:newUser,
+                
                 message:"Utilisateur créé !"
             })
         })
@@ -39,7 +44,7 @@ exports.login=(req,res,next) =>{
                 .json({message:"Login ou mot de passe incorrecte"})
             }
             res.status(200).json({
-                token:jwt.sign({userId:user._id},"RANDOM_TOKON_SECRET",{
+                token:jwt.sign({userId:user._id},"RANDOM_TOKEN_SECRET",{
                     expiresIn:"24h",
                 }),
             })
